@@ -1,0 +1,28 @@
+Title: Asteroid Attack
+Genre: Top down scrolling shooter
+
+Description:
+A huge cluster of asteroids has suddenly appeared and is headed straight 
+for Earth. Ex pilot Scotty Sky is Earth's last hope. Sky has flown on 
+hundreds of missions and saved countless lives but ever since the death
+of his co-pilot Harambe, he's been out of the game. Now, with the entire
+world in the balance, Sky has to suit up one last time. His mission is to 
+destroy the asteroids before they crash into Earth and figure out where
+these asteroids are coming from.
+
+ Mechanics:
+ Use the left and right arrow keys to move Sky's spaceship.
+ Hit the space bar to fire rockets to destroy asteroids
+ 
+ Level 1: Asteroid Waves
+ In the first level, Sky will have to eliminate waves of small asteroids
+ that are headed towards Earth. These asteroids are small and are
+ eliminated with one hit. The goal is to get through the waves without
+ letting more than three asteroids get past Sky's ship.
+ 
+ Level 2: Boss Asteroid
+ In the second level, the source of all the asteroids is revealed. It turns
+out the source is a giant asteroid with a face on it. This asteroid is much
+bigger and will take more than a few hits to kill. The asteroid also has
+a mind of its own and moves side to side as it moves towards Earth. Destroy
+the boss before it get's past Sky's ship or it is game over  
