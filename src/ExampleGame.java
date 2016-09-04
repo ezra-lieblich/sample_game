@@ -20,9 +20,9 @@ class ExampleGame {
 
     private Group Root;
     private Scene myScene;
-    private Ship myShip;
+    //private Ship myShip;
     private ArrayList<Sprite> mySprites = new ArrayList<Sprite>();
-
+    private SpriteManager spriteManager;
 
     /**
      * Returns name of the game.
@@ -39,12 +39,16 @@ class ExampleGame {
         Root = new Group();
         // create a place to see the shapes
         myScene = new Scene(Root, width, height, Color.WHITE);
+        spriteManager = new SpriteManager(width, height, Root);
+        /*
         // make some shapes and set their properties
         myShip = new Ship(width, height);
         // order added to the group is the order in whuch they are drawn
         mySprites.add(myShip);
         Root.getChildren().add(myShip.getNode());
         // respond to input
+         * 
+         */
         myScene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
         myScene.setOnKeyReleased(e -> handleKeyRelease(e.getCode()));
         return myScene;
@@ -63,35 +67,21 @@ class ExampleGame {
         // update attributes
     	//note that elapsed time is to adjust for frame rate
         //myShip.setX(200);
-    	for(Sprite obj : mySprites){
-    		obj.move(elapsedTime);
-    	}
+    	spriteManager.move(elapsedTime);
     }
 
 
     // What to do each time a key is pressed
     private void handleKeyInput (KeyCode code) {
-    	myShip.keyInput(code);
+    	spriteManager.keyInput(code);
     	
     }
     private void handleKeyRelease(KeyCode code) {
 		// TODO Auto-generated method stub
-    		myShip.keyRelease(code);
-    		switch (code) {
-            case SPACE:
-                 fireRocket();
-                break;
-            default:
-                // do nothing
-    		}
+    		spriteManager.keyRelease(code);
 		}	
 
     // What to do each time a key is pressed
     
-    public void fireRocket() {
-    	Rocket my_rocket = new Rocket(myShip);
-        Root.getChildren().add(my_rocket.getNode()); 
-        mySprites.add(my_rocket);
-       
-    }
+   
 }

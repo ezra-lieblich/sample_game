@@ -60,48 +60,6 @@ public class Ship extends Sprite {
 		// TODO Auto-generated method stub
 		return myShip;
 	}
-	
-	public void keyInput(KeyCode code){
-		switch (code) {
-        case RIGHT:
-        	velocity = shipSpeed; 
-            break;
-        case LEFT:
-        	velocity = -shipSpeed;
-            break;
-        case SPACE:
-            //fireRocket();
-            break;
-        case DOWN:
-            //myShip.setY(myShip.getY() + KEY_INPUT_SPEED);
-            break;
-        default:
-            // do nothing
-		}
-	}
-
-
-	public void keyRelease(KeyCode code) {
-		// TODO Auto-generated method stub
-		switch (code) {
-        case RIGHT:
-        	velocity = 0; 
-            break;
-        case LEFT:
-        	velocity = 0;
-            break;
-        case SPACE:
-            //fireRocket();
-            break;
-        case DOWN:
-            //myShip.setY(myShip.getY() + KEY_INPUT_SPEED);
-            break;
-        default:
-            // do nothing
-		
-		}
-	}
-
 
 	@Override
 	public double getXSize() {
@@ -114,5 +72,15 @@ public class Ship extends Sprite {
 	public double getYSize() {
 		// TODO Auto-generated method stub
 		return myShip.getBoundsInLocal().getHeight();
+	}
+	
+	public void moveRight() {
+		velocity = shipSpeed;
+	}
+	public void moveLeft() {
+		velocity = -shipSpeed;
+	}
+	public void stop() {
+		velocity = 0; 
 	}
 }
