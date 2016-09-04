@@ -5,7 +5,7 @@ Description:
 A huge cluster of asteroids has suddenly appeared and is headed straight 
 for Earth. Ex pilot Scotty Sky is Earth's last hope. Sky has flown on 
 hundreds of missions and saved countless lives but ever since the death
-of his co-pilot Harambe, he's been out of the game. Now, with the entire
+of his co-pilot, Harambe, he's been out of the game. Now, with the entire
 world in the balance, Sky has to suit up one last time. His mission is to 
 destroy the asteroids before they crash into Earth and figure out where
 these asteroids are coming from.

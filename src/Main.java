@@ -1,4 +1,4 @@
-import javafx.animation.KeyFrame;
+ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -10,7 +10,7 @@ import javafx.util.Duration;
  * This is the main program, it is basically boilerplate to create
  * an animated scene.
  * 
- * @author Robert C. Duvall
+ * @author Ezra Lieblich
  */
 public class Main extends Application {
     public static final int SIZE = 400;
