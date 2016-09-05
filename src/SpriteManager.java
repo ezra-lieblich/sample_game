@@ -1,5 +1,8 @@
 import java.util.ArrayList;
 
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -8,6 +11,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import javafx.util.Duration;
 
 public class SpriteManager {
     private Group Root;
@@ -62,5 +66,12 @@ public class SpriteManager {
 			rocket.move(time);
 		}
 	}
+	public void levelOne() {
+		Timeline timeline = new Timeline(new KeyFrame(
+				Duration.millis(5000), e -> fireRocket()));
+		timeline.setCycleCount(Animation.INDEFINITE);
+		timeline.play();
+	}
+
 	
 }

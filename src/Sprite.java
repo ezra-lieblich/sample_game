@@ -2,15 +2,33 @@ import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 
 public abstract class Sprite {
-	protected int velocity;
-	private ImageView image;
-	public abstract void setX(double width);
-	public abstract double getX();
-	public abstract double getXSize();
-	public abstract void setY(double height);
-	public abstract double getY();
-	public abstract double getYSize();
-	public abstract void move(double time);
-	public abstract Node getNode();
+	protected int velocityX;
+	protected int velocityY;
+	protected ImageView image;
+	public void setX(double width) {
+		image.setX(width);
+	}
+	public double getX(){
+		return image.getX();
+	}
+	public double getXSize(){
+		return image.getBoundsInLocal().getWidth();
+	}
+	public void setY(double height) {
+		image.setY(height);
+	}
+	public double getY() {
+		return image.getY();
+	}
+	public double getYSize() {
+		return image.getBoundsInLocal().getHeight();
+	}
+	public void move(double time){
+		setX(getX() + time * velocityX);
+		setY(getY() - time * velocityY);
+	}
+	public Node getNode() {
+		return image;
+	}
 	
 }

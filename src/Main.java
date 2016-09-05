@@ -13,7 +13,8 @@ import javafx.util.Duration;
  * @author Ezra Lieblich
  */
 public class Main extends Application {
-    public static final int SIZE = 400;
+    public static final int SIZEX = 400;
+    public static final int SIZEY = 600;
     public static final int FRAMES_PER_SECOND = 60;
     private static final int MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
     private static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
@@ -31,7 +32,7 @@ public class Main extends Application {
         s.setTitle(myGame.getTitle());
 
         // attach game to the stage and display it
-        Scene scene = myGame.init(SIZE, SIZE);
+        Scene scene = myGame.init(SIZEX, SIZEY);
         s.setScene(scene);
         s.show();
 
