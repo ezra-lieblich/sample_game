@@ -13,6 +13,10 @@ import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
+//if you have a magic number and use a conditional on that number, THAT IS VERY BAD
+//For placing things its okay to use magic numbers for only THIS project
+//Naming conventions for constants (public or private, static(java one instance of this, final)
+// ALL CAPS with _ UNDERSCORES
 
 /**
  * Separate the game code from some of the boilerplate code.
@@ -60,6 +64,8 @@ class ExampleGame {
      */
     public void step (double elapsedTime) {
     	spriteManager.move(elapsedTime);
+    	spriteManager.checkCollisions();
+    	//spriteManager.updateScore();
     }
 
 
@@ -68,7 +74,7 @@ class ExampleGame {
     	switch (code) {
         case ENTER:
         	myScene.setRoot(Root);
-        	spriteManager.levelOne();
+        	spriteManager.firstWave();
         	break;
         case Q:
         	myScene.setRoot(title);
