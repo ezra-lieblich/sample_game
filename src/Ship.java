@@ -25,6 +25,7 @@ public class Ship extends Sprite {
 	public void moveRight() {
 		if (this.getX() + this.getXSize() > Width) {
 			velocityX = 0;
+			//this.setX(Width - this.getXSize());
 		}
 		else {
 		velocityX = shipSpeed;
@@ -33,6 +34,7 @@ public class Ship extends Sprite {
 	public void moveLeft() {
 		if (this.getX() < 0) {
 			velocityX = 0;
+			//this.setX(0);
 		}
 		else {
 		velocityX = -shipSpeed;
