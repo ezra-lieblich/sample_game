@@ -17,6 +17,7 @@ import javafx.scene.text.FontWeight;
 //For placing things its okay to use magic numbers for only THIS project
 //Naming conventions for constants (public or private, static(java one instance of this, final)
 // ALL CAPS with _ UNDERSCORES
+//Every PUBLIC METHODS NEEDS A JAVADOC COMMENT
 
 /**
  * Separate the game code from some of the boilerplate code.
@@ -26,11 +27,10 @@ import javafx.scene.text.FontWeight;
 class ExampleGame {
     public static final String TITLE = "Asteroid Attack";
 
-    private Group Root;
     private Group title;
     private Scene myScene;
-    private SpriteManager spriteManager;
     private LaunchScreen launchScreen;
+    private GameplayLevel gameplayLevel;
 
     /**
      * Returns name of the game.
@@ -43,11 +43,11 @@ class ExampleGame {
      * Create the game's scene
      */
     public Scene init (int width, int height) {
-        Root = new Group();
         title = new Group();
+        title.setId("titleRoot");
         myScene = new Scene(title, width, height, Color.AQUA);
+    	gameplayLevel = new GameplayLevel();
         launchScreen = new LaunchScreen(width, height, title);
-        spriteManager = new SpriteManager(width, height, Root);
         myScene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
         myScene.setOnKeyReleased(e -> handleKeyRelease(e.getCode()));
         return myScene;
@@ -63,8 +63,11 @@ class ExampleGame {
      * but these simple ways work too.
      */
     public void step (double elapsedTime) {
-    	spriteManager.move(elapsedTime);
-    	spriteManager.checkCollisions();
+    	boolean result = (myScene.getRoot() != null && myScene.getRoot().getId().equals(GameplayLevel.id));
+    	if (myScene.getRoot() != null && myScene.getRoot().getId().equals(GameplayLevel.id)) {
+    		gameplayLevel.step(elapsedTime);
+    	}
+    	//checkStatus();
     	//spriteManager.updateScore();
     }
 
@@ -73,18 +76,18 @@ class ExampleGame {
     private void handleKeyInput (KeyCode code) {
     	switch (code) {
         case ENTER:
-        	myScene.setRoot(Root);
-        	spriteManager.firstWave();
+        	gameplayLevel = new GameplayLevel();
+        	myScene.setRoot(gameplayLevel.getRoot());
         	break;
         case Q:
         	myScene.setRoot(title);
     	}
-    	spriteManager.keyInput(code);
+    	gameplayLevel.keyInput(code);
     	
     }
     private void handleKeyRelease(KeyCode code) {
 		// TODO Auto-generated method stub
-    		spriteManager.keyRelease(code);
+    		gameplayLevel.keyRelease(code);
 		}	    
    
 }

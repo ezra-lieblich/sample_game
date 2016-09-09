@@ -12,14 +12,14 @@ public class Ship extends Sprite {
 	private final int shipSpeed = 60;
 	private int Width;
 
-	public Ship(int width, int height) {
+	public Ship() {
 		Image ship = new Image(getClass().getClassLoader().getResourceAsStream("ship.png"));
 		image = new ImageView(ship);
 		setX(Main.SIZEX / 2 - this.getXSize() / 2);
 		setY(Main.SIZEY - this.getYSize());
 		velocityY = 0;
 		velocityX = 0;
-		Width = width;
+		Width = Main.SIZEX;
 	}
 	
 	public void moveRight() {

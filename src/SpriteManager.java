@@ -21,20 +21,37 @@ public class SpriteManager {
     private Ship myShip;
     private ArrayList<Rocket> Rockets = new ArrayList<Rocket>();
     private ArrayList<Asteroid> Asteroids = new ArrayList<Asteroid>();
+    private ArrayList<Sprite> Sprites = new ArrayList<Sprite>();
     private int Score; 
     private Text scoreText;
     private int firstLevelEnemiesRemaining = 10;
+    private Text liveText;
+    private int lives;
     
-	public SpriteManager(int width, int height, Group root) {
+	public SpriteManager(Group root) {
 		Root = root;
-        myShip = new Ship(width, height);
-        Root.getChildren().add(myShip.getNode());
+		myShip = new Ship();
+	    Root.getChildren().add(myShip.getNode());
         Score = 0;
         scoreText = new Text(300, 20, "Score: " + Score);
         scoreText.setFont(new Font(20));
+        lives = 3;
+        liveText = new Text(0, 20, "Lives: " + lives);
+        liveText.setFont(new Font(20));
         Root.getChildren().add(scoreText);
-        boss = new Boss();
-    	Root.getChildren().add(boss.getNode());
+        Root.getChildren().add(liveText);
+        
+    	
+	}
+	
+	public void move(double time) {
+		myShip.move(time);
+		for (Rocket rocket: Rockets) {
+			rocket.move(time);
+		}
+		for (Asteroid asteroid: Asteroids) {
+			asteroid.move(time);
+		}
 	}
 	
 	public void keyInput(KeyCode code) {
@@ -66,6 +83,7 @@ public class SpriteManager {
 		
 		}
 	}
+	
 	public void fireRocket() {
     	Rocket new_rocket = new Rocket(myShip);
         Root.getChildren().add(new_rocket.getNode()); 
@@ -73,16 +91,6 @@ public class SpriteManager {
        
     }
 	
-	public void move(double time) {
-		myShip.move(time);
-		for (Rocket rocket: Rockets) {
-			rocket.move(time);
-		}
-		for (Asteroid asteroid: Asteroids) {
-			asteroid.move(time);
-		}
-		boss.move(time);
-	}
 	public void firstWave() {
 		Timeline firstLevel = new Timeline(new KeyFrame(
 				Duration.millis(3000), e -> asteroidDrop()));
@@ -99,15 +107,17 @@ public class SpriteManager {
 	}
 	
 	public boolean doIntersect(Sprite obj1, Sprite obj2) {
-		if(obj1.getX() > obj2.getX() + obj2.getXSize() || obj1.getX() + obj1.getXSize() < obj2.getX() 
-				|| obj1.getY() + obj1.getYSize() < obj2.getY() || obj1.getY() > obj2.getY() + obj2.getYSize()) {
-			return false;
-		}
-		return true;
+		return !(obj1.getX() > obj2.getX() + obj2.getXSize() || 
+				obj1.getX() + obj1.getXSize() < obj2.getX() || 
+				obj1.getY() + obj1.getYSize() < obj2.getY() || 
+				obj1.getY() > obj2.getY() + obj2.getYSize()); 
 	}
 	
 	public void checkCollisions() {
 		for (int i = Asteroids.size() - 1; i >= 0; i--) {
+			if (enemyOutOfBounds(Asteroids.get(i))){
+				removeLife(Asteroids.get(i), i);
+			}
 			for (int j = Rockets.size() -1; j >= 0; j--) {
 				if (doIntersect(Asteroids.get(i), Rockets.get(j))) {
 					Root.getChildren().remove(Asteroids.get(i).getNode());
@@ -119,7 +129,22 @@ public class SpriteManager {
 					break;
 				}
 			}
+			//error elliminating asteroid and then checking i
+			if (doIntersect(Asteroids.get(i), myShip)) {
+				removeLife(Asteroids.get(i), i);
+			}
 		}
+	}
+	
+	private void removeLife(Asteroid asteroid, int index) {
+		Asteroids.remove(index);
+		Root.getChildren().remove(asteroid.getNode());
+		lives--;
+		liveText.setText("Lives: " + lives);
+	}
+	
+	public boolean enemyOutOfBounds(Sprite enemy) {
+		return enemy.getY() > Main.SIZEY;
 	}
 	public void transitionLevel() {
 		/*Text saying first wave is almost over. Finish clearing astroids. Boss incoming soon
