@@ -20,6 +20,7 @@ public class SpriteManager {
     private Ship myShip;
 	private ArrayList<Rocket> Rockets = new ArrayList<Rocket>();
     private ArrayList<Asteroid> Asteroids = new ArrayList<Asteroid>();
+    private Boss Boss;
     
 	public SpriteManager(Group root) {
 		Root = root;
@@ -46,6 +47,7 @@ public class SpriteManager {
 		for (Asteroid asteroid: Asteroids) {
 			asteroid.move(time);
 		}
+		if (Boss != null) Boss.move(time);
 	}
 	
 	public void keyInput(KeyCode code) {
@@ -113,5 +115,9 @@ public class SpriteManager {
 		}
 		//System.out.println(Asteroids);
 		//System.out.println(Rockets);
+	}
+	public void addBoss() {
+		Boss = new Boss();
+		Root.getChildren().add(Boss.getNode());
 	}
 }

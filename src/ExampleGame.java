@@ -19,6 +19,7 @@ import javafx.scene.text.FontWeight;
 //Naming conventions for constants (public or private, static(java one instance of this, final)
 // ALL CAPS with _ UNDERSCORES
 //Every PUBLIC METHODS NEEDS A JAVADOC COMMENT
+//BorderPane
 
 /**
  * Separate the game code from some of the boilerplate code.
@@ -47,7 +48,7 @@ class ExampleGame {
         title = new Group();
         title.setId("titleRoot");
         myScene = new Scene(title, width, height, Color.AQUA);
-    	gameplayLevel = new GameplayLevel();
+    	//gameplayLevel = new GameplayLevel();
         launchScreen = new LaunchScreen(width, height, title);
         myScene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
         myScene.setOnKeyReleased(e -> handleKeyRelease(e.getCode()));
@@ -66,7 +67,9 @@ class ExampleGame {
     public void step (double elapsedTime) {
     	if (myScene.getRoot().getId().equals(GameplayLevel.id)) {
     		gameplayLevel.step(elapsedTime);
-    		//gameplayLevel.checkGameOver();
+    		//if (gameplayLevel.isGameOver()) {
+    			//loadGameOverScreen();
+    		//}
     	}
     	//checkStatus();
     	//spriteManager.updateScore();

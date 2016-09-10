@@ -17,6 +17,7 @@ public class GameplayLevel {
     private int firstLevelEnemiesRemaining = 10;
     private Text liveText;
     private int lives;
+    private Text currentLevel;
     public static final String id = "level node";
     private Timeline firstLevel;
     
@@ -29,6 +30,8 @@ public class GameplayLevel {
        //Root = new Group();
        Root.setId(id);
        spriteManager = new SpriteManager(Root);
+       currentLevel = new Text(150, 20, "First Level");
+       currentLevel.setFont(new Font(20));
        Score = 0;
        scoreText = new Text(300, 20, "Score: " + Score);
        scoreText.setFont(new Font(20));
@@ -37,6 +40,7 @@ public class GameplayLevel {
        liveText.setFont(new Font(20));
        Root.getChildren().add(scoreText);
        Root.getChildren().add(liveText);
+       Root.getChildren().add(currentLevel);
        firstWave();
    }
    public Group getRoot() {
@@ -46,12 +50,21 @@ public class GameplayLevel {
    public void step(double time) {
 		spriteManager.move(time);
 		checkCollisions();
-		if (gameOver()) {
+		if (firstLevelEnemiesRemaining == 0 && currentLevel.getText() == "First Level") {
+			startSecondLevel();
+		}
+		if (isGameOver()) {
 			gameOverMenu();
 		}
 	}
    
-   public void gameOverMenu() {
+   public void startSecondLevel() {
+	// TODO Auto-generated method stub
+	   currentLevel.setText("Boss Level");
+	   spriteManager.addBoss();
+}
+
+public void gameOverMenu() {
 	   firstLevel.stop();
 	   Root.getChildren().clear();   
 	   Button button = new Button("Restart Game");
@@ -59,7 +72,9 @@ public class GameplayLevel {
 	   button.setLayoutX(Main.SIZEX/2 - 50);
 	   button.setLayoutY(Main.SIZEY/2);
 	   button.setOnKeyPressed(e -> restartGame(e.getCode()));
-	   //button.setOnMouseClicked(e -> restartGame());
+	   button.setOnMousePressed(e -> {
+		   System.out.println("button clicked");
+	   });
 }
 
    public void restartGame(KeyCode code) {
@@ -70,13 +85,18 @@ public class GameplayLevel {
 	   	break;
 	   }
    }
-public boolean gameOver() {
+public boolean isGameOver() {
 	return lives <= 0;
 	
 }
 
 public void keyInput(KeyCode code) {
 	   spriteManager.keyInput(code);
+		switch (code) {
+		case S:
+			firstLevel.stop();
+			firstLevelEnemiesRemaining = 0;
+		}
 	}
 	
 	public void keyRelease(KeyCode code) {
@@ -98,6 +118,7 @@ public void keyInput(KeyCode code) {
 					spriteManager.doIntersect(asteroid, spriteManager.getMyShip())){
 				asteroids_to_remove.add(asteroid);
 				removeLife(asteroid);
+				firstLevelEnemiesRemaining--;
 			}
 				for (Rocket rocket : spriteManager.getRockets()) {
 					if (spriteManager.OutOfBoundsY(rocket)) {
@@ -108,6 +129,7 @@ public void keyInput(KeyCode code) {
 						asteroids_to_remove.add(asteroid);
 						rockets_to_remove.add(rocket);
 						updateScore(asteroid, rocket);
+						firstLevelEnemiesRemaining--;
 						break;
 					}
 				}
