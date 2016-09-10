@@ -4,6 +4,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -50,7 +51,7 @@ class ExampleGame {
         launchScreen = new LaunchScreen(width, height, title);
         myScene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
         myScene.setOnKeyReleased(e -> handleKeyRelease(e.getCode()));
-        return myScene;
+ 	   return myScene;
 
     }
 
@@ -63,9 +64,9 @@ class ExampleGame {
      * but these simple ways work too.
      */
     public void step (double elapsedTime) {
-    	boolean result = (myScene.getRoot() != null && myScene.getRoot().getId().equals(GameplayLevel.id));
-    	if (myScene.getRoot() != null && myScene.getRoot().getId().equals(GameplayLevel.id)) {
+    	if (myScene.getRoot().getId().equals(GameplayLevel.id)) {
     		gameplayLevel.step(elapsedTime);
+    		//gameplayLevel.checkGameOver();
     	}
     	//checkStatus();
     	//spriteManager.updateScore();

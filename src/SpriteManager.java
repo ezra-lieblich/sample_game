@@ -17,33 +17,27 @@ import javafx.util.Duration;
 
 public class SpriteManager {
     private Group Root;
-    private Boss boss;
     private Ship myShip;
-    private ArrayList<Rocket> Rockets = new ArrayList<Rocket>();
+	private ArrayList<Rocket> Rockets = new ArrayList<Rocket>();
     private ArrayList<Asteroid> Asteroids = new ArrayList<Asteroid>();
-    private ArrayList<Sprite> Sprites = new ArrayList<Sprite>();
-    private int Score; 
-    private Text scoreText;
-    private int firstLevelEnemiesRemaining = 10;
-    private Text liveText;
-    private int lives;
     
 	public SpriteManager(Group root) {
 		Root = root;
 		myShip = new Ship();
 	    Root.getChildren().add(myShip.getNode());
-        Score = 0;
-        scoreText = new Text(300, 20, "Score: " + Score);
-        scoreText.setFont(new Font(20));
-        lives = 3;
-        liveText = new Text(0, 20, "Lives: " + lives);
-        liveText.setFont(new Font(20));
-        Root.getChildren().add(scoreText);
-        Root.getChildren().add(liveText);
-        
-    	
 	}
-	
+	 
+	 public Ship getMyShip() {
+			return myShip;
+		}
+
+		public ArrayList<Rocket> getRockets() {
+			return Rockets;
+		}
+
+		public ArrayList<Asteroid> getAsteroids() {
+			return Asteroids;
+		}
 	public void move(double time) {
 		myShip.move(time);
 		for (Rocket rocket: Rockets) {
@@ -91,19 +85,10 @@ public class SpriteManager {
        
     }
 	
-	public void firstWave() {
-		Timeline firstLevel = new Timeline(new KeyFrame(
-				Duration.millis(3000), e -> asteroidDrop()));
-		firstLevel.setCycleCount(firstLevelEnemiesRemaining);
-		firstLevel.play();
-	}
-	
-	public void asteroidDrop() {
-		if (firstLevelEnemiesRemaining > 0){
+	public void asteroidDrop() {	
 			Asteroid new_enemy = new Asteroid(400, 600);
 			Root.getChildren().add(new_enemy.getNode());
 			Asteroids.add(new_enemy);
-		}
 	}
 	
 	public boolean doIntersect(Sprite obj1, Sprite obj2) {
@@ -113,44 +98,20 @@ public class SpriteManager {
 				obj1.getY() > obj2.getY() + obj2.getYSize()); 
 	}
 	
-	public void checkCollisions() {
-		for (int i = Asteroids.size() - 1; i >= 0; i--) {
-			if (enemyOutOfBounds(Asteroids.get(i))){
-				removeLife(Asteroids.get(i), i);
-			}
-			for (int j = Rockets.size() -1; j >= 0; j--) {
-				if (doIntersect(Asteroids.get(i), Rockets.get(j))) {
-					Root.getChildren().remove(Asteroids.get(i).getNode());
-					Root.getChildren().remove(Rockets.get(j).getNode());
-					Asteroids.remove(i);
-					Rockets.remove(j);
-					Score++;
-					scoreText.setText("Score: " + Score);
-					break;
-				}
-			}
-			//error elliminating asteroid and then checking i
-			if (doIntersect(Asteroids.get(i), myShip)) {
-				removeLife(Asteroids.get(i), i);
-			}
+	public boolean OutOfBoundsY(Sprite sprite) {
+		return sprite.getY() > Main.SIZEY || (sprite.getY() + sprite.getYSize()) < 0;
+	}
+	
+	public void removeSprites(ArrayList<Asteroid> dead_asteroids, ArrayList<Rocket> dead_rockets) {
+		for (Asteroid asteroid : dead_asteroids) {
+			Root.getChildren().remove(asteroid.getNode());
+			Asteroids.remove(asteroid);
 		}
-	}
-	
-	private void removeLife(Asteroid asteroid, int index) {
-		Asteroids.remove(index);
-		Root.getChildren().remove(asteroid.getNode());
-		lives--;
-		liveText.setText("Lives: " + lives);
-	}
-	
-	public boolean enemyOutOfBounds(Sprite enemy) {
-		return enemy.getY() > Main.SIZEY;
-	}
-	public void transitionLevel() {
-		/*Text saying first wave is almost over. Finish clearing astroids. Boss incoming soon
-		 * Timeline that is delayed 15 seconds to finish.
-		 * Handle event add boss to Asteroids.
-		 * 
-		 */
+		for (Rocket rocket : dead_rockets) {
+			Root.getChildren().remove(rocket.getNode());
+			Rockets.remove(rocket);
+		}
+		//System.out.println(Asteroids);
+		//System.out.println(Rockets);
 	}
 }
