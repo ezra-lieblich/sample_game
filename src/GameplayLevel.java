@@ -28,6 +28,8 @@ public class GameplayLevel {
     
    public void startGame() {  
        //Root = new Group();
+	   Root.setOnKeyPressed(e -> keyInput(e.getCode()));
+	   Root.setOnKeyReleased(e -> keyRelease(e.getCode()));
        Root.setId(id);
        spriteManager = new SpriteManager(Root);
        currentLevel = new Text(150, 20, "First Level");
@@ -51,10 +53,11 @@ public class GameplayLevel {
 		spriteManager.move(time);
 		checkCollisions();
 		if (firstLevelEnemiesRemaining == 0 && currentLevel.getText() == "First Level") {
+			spriteManager.clearLevel();
 			startSecondLevel();
 		}
-		if (isGameOver()) {
-			gameOverMenu();
+		if (currentLevel.getText() == "Boss Level"){
+			bossCollisions();
 		}
 	}
    
@@ -86,7 +89,7 @@ public void gameOverMenu() {
 	   }
    }
 public boolean isGameOver() {
-	return lives <= 0;
+	return lives <= 0 || winGame();
 	
 }
 
@@ -111,37 +114,57 @@ public void keyInput(KeyCode code) {
 	}
 	
 	public void checkCollisions() {
-		ArrayList<Asteroid> asteroids_to_remove = new ArrayList<Asteroid>();
-		ArrayList<Rocket> rockets_to_remove = new ArrayList<Rocket>();
-		for (Asteroid asteroid : spriteManager.getAsteroids()) {
+		ArrayList<Sprite> sprites_to_remove = new ArrayList<Sprite>();
+		for (Sprite asteroid : spriteManager.getAsteroids()) {
 			if (spriteManager.OutOfBoundsY(asteroid) ||
 					spriteManager.doIntersect(asteroid, spriteManager.getMyShip())){
-				asteroids_to_remove.add(asteroid);
-				removeLife(asteroid);
+				sprites_to_remove.add(asteroid);
+				removeLife();
 				firstLevelEnemiesRemaining--;
 			}
-				for (Rocket rocket : spriteManager.getRockets()) {
+				for (Sprite rocket : spriteManager.getRockets()) {
 					if (spriteManager.OutOfBoundsY(rocket)) {
-						Root.getChildren().remove(rocket.getNode());
-						rockets_to_remove.add(rocket);
+						sprites_to_remove.add(rocket);
 					}
 					if (spriteManager.doIntersect(asteroid, rocket)) {
-						asteroids_to_remove.add(asteroid);
-						rockets_to_remove.add(rocket);
-						updateScore(asteroid, rocket);
+						sprites_to_remove.add(asteroid);
+						sprites_to_remove.add(rocket);
+						updateScore();
 						firstLevelEnemiesRemaining--;
 						break;
 					}
 				}
 		}
-		spriteManager.removeSprites(asteroids_to_remove, rockets_to_remove);
+		spriteManager.removeSprites(sprites_to_remove);
 	}
-	private void removeLife(Asteroid asteroid) {
+	public void bossCollisions() {
+		ArrayList<Sprite> rockets_to_remove = new ArrayList<Sprite>();
+		Boss boss = spriteManager.getBoss();
+		if (spriteManager.OutOfBoundsY(boss) ||
+				spriteManager.doIntersect(boss, spriteManager.getMyShip())) {
+				lives = 0;
+			}
+		for (Sprite rocket : spriteManager.getRockets()) {
+			if (spriteManager.OutOfBoundsY(rocket)) {
+				rockets_to_remove.add(rocket);
+			}
+			if (spriteManager.doIntersect(rocket, boss)) {
+				updateScore();
+				rockets_to_remove.add(rocket);
+				spriteManager.bossDamage();
+			}
+		}
+		spriteManager.removeSprites(rockets_to_remove);
+	}
+	private void removeLife() {
 		lives--;
 		liveText.setText("Lives: " + lives);
 	}
-	private void updateScore(Asteroid asteroid, Rocket rocket) {
+	private void updateScore() {
 		Score++;
 		scoreText.setText("Score: " + Score);
+	}
+	public boolean winGame() {
+		return spriteManager.isBossDead();
 	}
 }

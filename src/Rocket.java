@@ -9,7 +9,7 @@ public class Rocket extends Sprite{
         image = new ImageView(rocket);
         setX(ship.getX() + ship.getXSize()/2 - this.getXSize() / 2);
         setY(ship.getY() - this.getYSize());
-        velocityY = 90;
+        velocityY = 150;
         velocityX = 0;
 	}
 }

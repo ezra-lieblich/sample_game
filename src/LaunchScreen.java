@@ -15,21 +15,17 @@ import javafx.scene.text.FontWeight;
 
 public class LaunchScreen {
 	private Group Root;
-	public LaunchScreen(int width, int height, Group root) {
-		Root = root;
-		Canvas canvas = new Canvas( width, height );
-        Root.getChildren().add( canvas );
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setFill( Color.BEIGE );
-        gc.fillRect(width*.125, height*.25, width*.75, width*.75);
-        gc.setStroke( Color.BLACK );
-        gc.setLineWidth(2);
-        Font theFont = Font.font( "Times New Roman", FontWeight.BOLD, 42 );
-        gc.setFont( theFont );
-        gc.setFill(Color.BLACK);
-        gc.fillText( "Asteroid Attack", width*.125, height*.25+theFont.getSize() );
-        Font sub_font = Font.font("Times New Roman", 20);
-        gc.setFont(sub_font);
-        gc.fillText( "Instructions:", width*.125, height*.50+theFont.getSize() );
+	public static final String id = "launch node";
+	public LaunchScreen() {
+		Root = new Group();
+		Root.setId(id);
+		Image load_screen = new Image(getClass().getClassLoader().getResourceAsStream("SplashScreen.png"));
+		ImageView image = new ImageView(load_screen);
+		image.setX(Main.SIZEX/2 - image.getBoundsInLocal().getWidth()/2);
+		image.setY(Main.SIZEY/2 - image.getBoundsInLocal().getHeight()/2);
+		Root.getChildren().add(image);
+	}
+	public Group getRoot() {
+		return Root;
 	}
 }

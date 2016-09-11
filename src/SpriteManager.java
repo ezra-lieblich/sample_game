@@ -18,8 +18,8 @@ import javafx.util.Duration;
 public class SpriteManager {
     private Group Root;
     private Ship myShip;
-	private ArrayList<Rocket> Rockets = new ArrayList<Rocket>();
-    private ArrayList<Asteroid> Asteroids = new ArrayList<Asteroid>();
+	private ArrayList<Sprite> Rockets = new ArrayList<Sprite>();
+    private ArrayList<Sprite> Asteroids = new ArrayList<Sprite>();
     private Boss Boss;
     
 	public SpriteManager(Group root) {
@@ -27,24 +27,26 @@ public class SpriteManager {
 		myShip = new Ship();
 	    Root.getChildren().add(myShip.getNode());
 	}
-	 
+	 public Boss getBoss() {
+		 return Boss;
+	 }
 	 public Ship getMyShip() {
 			return myShip;
 		}
 
-		public ArrayList<Rocket> getRockets() {
+		public ArrayList<Sprite> getRockets() {
 			return Rockets;
 		}
 
-		public ArrayList<Asteroid> getAsteroids() {
+		public ArrayList<Sprite> getAsteroids() {
 			return Asteroids;
 		}
 	public void move(double time) {
 		myShip.move(time);
-		for (Rocket rocket: Rockets) {
+		for (Sprite rocket: Rockets) {
 			rocket.move(time);
 		}
-		for (Asteroid asteroid: Asteroids) {
+		for (Sprite asteroid: Asteroids) {
 			asteroid.move(time);
 		}
 		if (Boss != null) Boss.move(time);
@@ -88,9 +90,9 @@ public class SpriteManager {
     }
 	
 	public void asteroidDrop() {	
-			Asteroid new_enemy = new Asteroid(400, 600);
-			Root.getChildren().add(new_enemy.getNode());
-			Asteroids.add(new_enemy);
+		Asteroid new_enemy = new Asteroid(400, 600);
+		Root.getChildren().add(new_enemy.getNode());
+		Asteroids.add(new_enemy);
 	}
 	
 	public boolean doIntersect(Sprite obj1, Sprite obj2) {
@@ -104,7 +106,18 @@ public class SpriteManager {
 		return sprite.getY() > Main.SIZEY || (sprite.getY() + sprite.getYSize()) < 0;
 	}
 	
-	public void removeSprites(ArrayList<Asteroid> dead_asteroids, ArrayList<Rocket> dead_rockets) {
+	public void removeSprites(ArrayList<Sprite> dead_sprites) {
+		for (Sprite sprite : dead_sprites) {
+			Root.getChildren().remove(sprite.getNode());
+			if (sprite.getClass().equals(Rocket.class)) {
+
+				Rockets.remove(sprite);
+			}
+			else{				
+				Asteroids.remove(sprite);
+			}
+		}
+		/*
 		for (Asteroid asteroid : dead_asteroids) {
 			Root.getChildren().remove(asteroid.getNode());
 			Asteroids.remove(asteroid);
@@ -113,11 +126,32 @@ public class SpriteManager {
 			Root.getChildren().remove(rocket.getNode());
 			Rockets.remove(rocket);
 		}
+		*/
 		//System.out.println(Asteroids);
 		//System.out.println(Rockets);
 	}
 	public void addBoss() {
 		Boss = new Boss();
 		Root.getChildren().add(Boss.getNode());
+	}
+	public void bossDamage() {
+		Boss.decreaseHealth();
+		System.out.println(Boss.isDead());
+	}
+	
+	public void clearLevel() {
+		for (Sprite rocket : Rockets) {
+			Root.getChildren().remove(rocket.getNode());
+			//Rockets.remove(rocket);
+		}
+		Rockets.clear();
+		for (Sprite asteroid : Asteroids) {
+			Root.getChildren().remove(asteroid.getNode());
+			//Asteroids.remove(asteroid);
+		}
+		Asteroids.clear();
+	}
+	public boolean isBossDead() {
+		return Boss != null && Boss.isDead();
 	}
 }

@@ -22,25 +22,21 @@ public class Ship extends Sprite {
 		Width = Main.SIZEX;
 	}
 	
-	public void moveRight() {
-		if (this.getX() + this.getXSize() > Width) {
-			velocityX = 0;
-			//this.setX(Width - this.getXSize());
-		}
-		else {
+	public void move(double time) {
+		wrapAround();
+		this.setX(getX() + time * velocityX);
+	}
+	public void moveRight() {	
 		velocityX = shipSpeed;
-		}
 	}
 	public void moveLeft() {
-		if (this.getX() < 0) {
-			velocityX = 0;
-			//this.setX(0);
-		}
-		else {
 		velocityX = -shipSpeed;
-		}
 	}
 	public void stop() {
 		velocityX = 0; 
+	}
+	private void wrapAround() {
+		if(this.getX() < 0) this.setX(Main.SIZEX - this.getXSize());
+		if(this.getX() + this.getXSize() > Main.SIZEX) this.setX(0); 
 	}
 }
