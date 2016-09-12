@@ -1,17 +1,18 @@
-import javafx.scene.Group;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
 
+
+/**
+ * Extends the properties of the Sprite and is the ship that fires rockets. Called by the SpriteManager
+ * @author ezra
+ *
+ */
 public class Ship extends Sprite {
 	private final int shipSpeed = 60;
-	private int Width;
 
+	/** 
+	 * Loads the image and sets the default position to the middle of the screen
+	 */
 	public Ship() {
 		Image ship = new Image(getClass().getClassLoader().getResourceAsStream("ship.png"));
 		image = new ImageView(ship);
@@ -19,19 +20,30 @@ public class Ship extends Sprite {
 		setY(Main.SIZEY - this.getYSize());
 		velocityY = 0;
 		velocityX = 0;
-		Width = Main.SIZEX;
 	}
-	
+	/**
+	 * Overrides the move and wrapAround resets your position to the opposite side
+	 * if you are outside the map
+	 */
 	public void move(double time) {
 		wrapAround();
 		this.setX(getX() + time * velocityX);
 	}
+	/**
+	 * Sets velocity to positive and moves to the right. Called when key input is the right arrow
+	 */
 	public void moveRight() {	
 		velocityX = shipSpeed;
 	}
+	/**
+	 * Sets velocity to negative and moves to the left. Called when key input is the left arrow
+	 */
 	public void moveLeft() {
 		velocityX = -shipSpeed;
 	}
+	/**
+	 * Sets velocity to zero and stop movement. Called when key is released
+	 */
 	public void stop() {
 		velocityX = 0; 
 	}

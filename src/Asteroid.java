@@ -1,19 +1,16 @@
-
-import javafx.scene.Group;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
 
+/**
+ * This is the sprite that represent the enemies in the first level. It is called by the 
+ * @author ezra
+ *
+ */
 public class Asteroid extends Sprite {
-	public Asteroid (int width, int height) {
+	public Asteroid () {
 		Image asteroid = new Image(getClass().getClassLoader().getResourceAsStream("asteroid.png"));
 		image = new ImageView(asteroid);
-		setX(Math.random() * (400 - this.getXSize()));
+		setX(Math.random() * (Main.SIZEX - this.getXSize()));
 		setY(0);
 		velocityY = -40;
 		velocityX = 0;

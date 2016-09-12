@@ -7,10 +7,9 @@ import javafx.util.Duration;
 
 
 /**
- * This is the main program, it is basically boilerplate to create
- * an animated scene.
+ * The main program, it creates an animated scene.
  * 
- * @author Ezra Lieblich
+ * @author ezra, Robert Duvall
  */
 public class Main extends Application {
     public static final int SIZEX = 400;
@@ -19,27 +18,20 @@ public class Main extends Application {
     private static final int MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
     private static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
 
-    private ExampleGame myGame;
-
-
+    private Game myGame;
     /**
-     * Set things up at the beginning.
+     * Set things up at the beginning. It creates a game and then initializes a scene and starts the
+     * games loop
      */
     @Override
     public void start (Stage s) {
-        // create your own game here
-        myGame = new ExampleGame();
+        myGame = new Game();
         s.setTitle(myGame.getTitle());
-
-        // attach game to the stage and display it
         Scene scene = myGame.init(SIZEX, SIZEY);
         s.setScene(scene);
         s.show();
-
-        // sets the game's loop
-        //keyframe or mouse input will use this syntax to call a function
+        // sets the game's loop and calls the step method to move events
         KeyFrame frame = new KeyFrame(Duration.millis(MILLISECOND_DELAY),
-        		//e is to used to pass in parameter
                                       e -> myGame.step(SECOND_DELAY));
         Timeline animation = new Timeline();
         animation.setCycleCount(Timeline.INDEFINITE);
