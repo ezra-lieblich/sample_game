@@ -85,6 +85,9 @@ public class SpriteManager {
         case LEFT:
         	myShip.moveLeft();
             break;
+        //cheat code to fire rocket on input rather then release
+        case B:
+        	fireRocket();
         default:
         	break;
 		}
@@ -131,6 +134,18 @@ public class SpriteManager {
 				obj1.getY() > obj2.getY() + obj2.getYSize()); 
 	}
 	/**
+	 * Checks if the rocket collided in the middle fourth of the boss.
+	 * @param boss Boss Sprite to look at
+	 * @param rocket  Rocket Sprite to look at
+	 * @return True if its in the middle fourth and false if not
+	 */
+	public boolean isDirectHit(Sprite boss, Sprite rocket) {
+		double boss_center = boss.getX() + boss.getXSize()/2;
+		double rocket_center = rocket.getX() + rocket.getXSize()/2;
+		return (boss_center - boss.getXSize()*.125) < rocket_center &&
+				rocket_center < (boss_center + boss.getXSize()*.125);
+	}
+	/**
 	 * Checks if a sprite is vertically outside the games screen. Called by gamePlayLevel
 	 * @param sprite - Sprite that is check to be outside of bounds
 	 * @return - True if Sprite is above or below the screen false otherwise
@@ -158,8 +173,8 @@ public class SpriteManager {
 	/**
 	 * Called when a rocket collides with boss and decreases bosses health
 	 */
-	public void bossDamage() {
-		Boss.decreaseHealth();
+	public void bossDamage(int damage) {
+		Boss.decreaseHealth(damage);
 	}
 	/**
 	 * Clears the scene when the first level is complete

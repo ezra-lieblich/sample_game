@@ -12,7 +12,7 @@ public class Asteroid extends Sprite {
 		image = new ImageView(asteroid);
 		setX(Math.random() * (Main.SIZEX - this.getXSize()));
 		setY(0);
-		velocityY = -40;
+		velocityY = -45;
 		velocityX = 0;
 	}
 }

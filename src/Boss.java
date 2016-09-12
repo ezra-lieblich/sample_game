@@ -37,8 +37,8 @@ public class Boss extends Sprite {
 	/**
 	 * Decreases the health of the Boss
 	 */
-	public void decreaseHealth() {
-		HealthPoints--;
+	public void decreaseHealth(int damage) {
+		HealthPoints -= damage;
 	}
 	/**
 	 * Checks if the Boss is dead

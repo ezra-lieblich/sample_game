@@ -16,15 +16,13 @@ import javafx.util.Duration;
  */
 public class GameplayLevel {
 	private SpriteManager spriteManager; 
+	private GameplayInfo gameplayInfo;
     private Group Root;
-    private int Score; 
-    private Text scoreText;
     private int firstLevelEnemiesRemaining = 10;
-    private Text liveText;
-    private int lives;
-    private Text currentLevel;
     public static final String id = "level node";
     private Timeline firstLevel;
+    private boolean skipGame;
+    private boolean directHitsOnly;
     
     /**
      * Creates the route and starts the game by setting up the text and sending the first wave of enemies
@@ -35,9 +33,9 @@ public class GameplayLevel {
  	   	Root.setOnKeyReleased(e -> keyRelease(e.getCode()));
         Root.setId(id);
         spriteManager = new SpriteManager(Root);
-        Score = 0;
-        lives = 3;
-        setText();
+        gameplayInfo = new GameplayInfo();
+        skipGame = false;
+        directHitsOnly = false;
         firstWave();
     }
     /**
@@ -47,29 +45,13 @@ public class GameplayLevel {
 	   return Root;
    }
    /**
-    * Helper method that inserts information about the level into text and into the top
-    * right of the screen
-    */
-   private void setText() {
-	   int text_size = 20;
-	   currentLevel = new Text(150, text_size, "First Level");
-       currentLevel.setFont(new Font(text_size));
-       scoreText = new Text(300, text_size, "Score: " + Score);
-       scoreText.setFont(new Font(text_size));
-       liveText = new Text(0, text_size, "Lives: " + lives);
-       liveText.setFont(new Font(text_size));
-       Root.getChildren().add(scoreText);
-       Root.getChildren().add(liveText);
-       Root.getChildren().add(currentLevel);
-   }
-   /**
     * Moves all the Sprite and also checks collisions with Asteroids or Rockets Depending on what
     * level the user is on
     * @param time
     */
    public void step(double time) {
 		spriteManager.move(time);
-		if (currentLevel.getText() == "First Level"){
+		if (gameplayInfo.currentLevel.getText() == GameplayInfo.levelOne){
 			checkCollisions();
 			//check if first level is complete 
 			if (firstLevelEnemiesRemaining == 0) {
@@ -77,22 +59,23 @@ public class GameplayLevel {
 				startSecondLevel();
 			}
 		}
-		if (currentLevel.getText() == "Boss Level"){
+		if (gameplayInfo.currentLevel.getText() == GameplayInfo.bossLevel){
 			bossCollisions();
 		}
 	}
    /**
-    * Adds the boss to the gameplay to start second level
+    * Adds the boss to the gameplay to start second level. Also calls gameplayInfo
+    * to switch current level 
     */
    private void startSecondLevel() {
-	   currentLevel.setText("Boss Level");
+	   gameplayInfo.switchCurrentLevel();
 	   spriteManager.addBoss();
 }
 /**
  * @return returns true if user has no lives or boss is defeated
  */
 public boolean isGameOver() {
-	return lives <= 0 || winGame();
+	return gameplayInfo.getLives() <= 0 || winGame();
 	
 }
 /**
@@ -103,10 +86,17 @@ public boolean isGameOver() {
 public void keyInput(KeyCode code) {
 	   spriteManager.keyInput(code);
 		switch (code) {
+		//cheat code to skip first level
 		case S:
 			firstLevel.stop();
 			firstLevelEnemiesRemaining = 0;
 			break;
+		//cheat code to auto win and go to game over screen
+		case W:
+			skipGame = true;
+		//cheat code to make all rockets direct hits on boss
+		case A:
+			directHitsOnly = true;
 		default:
 			break;
 		}
@@ -140,19 +130,16 @@ public void keyInput(KeyCode code) {
 			if (spriteManager.OutOfBoundsY(asteroid) ||
 					spriteManager.doIntersect(asteroid, spriteManager.getMyShip())){
 				sprites_to_remove.add(asteroid);
-				removeLife();
+				gameplayInfo.removeLife();
 				firstLevelEnemiesRemaining--;
 			}
 				for (Sprite rocket : spriteManager.getRockets()) {
-					//remove rockets that go above screen
-					if (spriteManager.OutOfBoundsY(rocket)) {
-						sprites_to_remove.add(rocket);
-					}
+					removeOutOfBoundsRocket(sprites_to_remove, rocket);
 					//Score increases if rocket hits asteroid
 					if (spriteManager.doIntersect(asteroid, rocket)) {
 						sprites_to_remove.add(asteroid);
 						sprites_to_remove.add(rocket);
-						updateScore();
+						gameplayInfo.updateScore(GameplayInfo.normalHit);
 						firstLevelEnemiesRemaining--;
 						break;
 					}
@@ -170,38 +157,103 @@ public void keyInput(KeyCode code) {
 		//automatically lose if boss hits ship or falls past you
 		if (spriteManager.OutOfBoundsY(boss) ||
 				spriteManager.doIntersect(boss, spriteManager.getMyShip())) {
-				lives = 0;
+				gameplayInfo.gameOver();
 			}
 		for (Sprite rocket : spriteManager.getRockets()) {
-			if (spriteManager.OutOfBoundsY(rocket)) {
+			removeOutOfBoundsRocket(rockets_to_remove, rocket);
+			if (spriteManager.doIntersect(boss, rocket)) {
 				rockets_to_remove.add(rocket);
-			}
-			if (spriteManager.doIntersect(rocket, boss)) {
-				updateScore();
-				rockets_to_remove.add(rocket);
-				spriteManager.bossDamage();
+				int points;
+				if (spriteManager.isDirectHit(boss, rocket) || directHitsOnly) points = GameplayInfo.directHit;
+				else points = GameplayInfo.normalHit;
+				
+				gameplayInfo.updateScore(points);
+				spriteManager.bossDamage(points);
 			}
 		}
 		spriteManager.removeSprites(rockets_to_remove);
 	}
-	/**
-	 * Removes a life and updates text. Called when asteroid falls past user or hits ship
-	 */
-	private void removeLife() {
-		lives--;
-		liveText.setText("Lives: " + lives);
-	}
-	/**
-	 * Increases score and updates text. Called when rocket hits an enemy
-	 */
-	private void updateScore() {
-		Score++;
-		scoreText.setText("Score: " + Score);
+	
+	private void removeOutOfBoundsRocket(ArrayList<Sprite> dead_sprites, Sprite rocket) {
+		if (spriteManager.OutOfBoundsY(rocket)) {
+			dead_sprites.add(rocket);
+		}
 	}
 	/**
 	 * @return true when boss is dead
 	 */
 	public boolean winGame() {
-		return spriteManager.isBossDead();
+		return spriteManager.isBossDead() || skipGame;
+	}
+	
+	/**
+	 * A class that is accessed by GameplayLevel and contains important information about the
+	 * current game state such as the lives, level and score
+	 * @author ezra
+	 *
+	 */
+	class GameplayInfo {
+		 public static final String scorePrefix = "Score: ";
+		 public static final String livePrefix = "Lives: ";
+		 public static final String levelOne = "First Level";
+		 public static final String bossLevel = "Boss Level";
+		 public static final int textSize = 20;
+		 public static final int normalHit = 1;
+		 public static final int directHit = 5;
+		 private int Score; 	
+		 private Text scoreText;
+		 private Text liveText;
+		 private int lives;
+		 private Text currentLevel;
+		 
+		 /**
+		  * Sets the score, current level, and lives information to text at top
+		  * of screen
+		  */
+		 public GameplayInfo() {
+			 currentLevel = new Text(150, textSize, "First Level");
+		     currentLevel.setFont(new Font(textSize));
+		     Score = 0;
+		     scoreText = new Text(300, textSize, "Score: " + Score);
+		     scoreText.setFont(new Font(textSize));
+		     lives = 3;
+		     liveText = new Text(0, textSize, "Lives: " + lives);
+		     liveText.setFont(new Font(textSize));
+		     Root.getChildren().add(scoreText);
+		     Root.getChildren().add(liveText);
+		     Root.getChildren().add(currentLevel);
+		 }
+		 /**
+		  * Switches the current level and updates text once first level is complete
+		  */
+		 public void switchCurrentLevel() {
+			 currentLevel.setText(bossLevel);
+		 }
+		 /**
+		  * @return the number of lives remaining
+		  */
+		 public int getLives() {
+			 return lives;
+		 }
+		 /**
+		 * Removes a life and updates text. Called when asteroid falls past user or hits ship
+		 */
+		public void removeLife() {
+			lives--;
+			liveText.setText("Lives: " + lives);
+		}
+		/**
+		 * Increases score and updates text. Called when rocket hits an enemy
+		 */
+		public void updateScore(int points) {
+			Score += points ;
+			scoreText.setText("Score: " + Score);
+		}
+		/**
+		 * Sets the game over when the boss hits the ship or goes past the screen
+		 */
+		public void gameOver() {
+			lives = 0;
+		}
 	}
 }
