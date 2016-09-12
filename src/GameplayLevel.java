@@ -9,8 +9,9 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 /**
- * This controls the Levels and is where the levels are controlled. It is called on by Game and also
- * interacts with spriteManager to update Sprites in the game.
+ * This controls the Levels. It is called on by Game and also
+ * interacts with spriteManager to update Sprites in the game Also
+ * relies on child class gamplayInfo to recieve information about the game.
  * @author ezra
  *
  */
@@ -45,7 +46,7 @@ public class GameplayLevel {
 		return Root;
 	}
 	/**
-	 * Moves all the Sprite and also checks collisions with Asteroids or Rockets Depending on what
+	 * Moves all the Sprites and also checks collisions with Asteroids or Rockets depending on what
 	 * level the user is on
 	 * @param time
 	 */
@@ -91,12 +92,14 @@ public class GameplayLevel {
 			firstLevel.stop();
 			firstLevelEnemiesRemaining = 0;
 			break;
-			//cheat code to auto win and go to game over screen
+		//cheat code to auto win and go to game over screen
 		case W:
 			skipGame = true;
-			//cheat code to make all rockets direct hits on boss
+			break;
+		//cheat code to make all rockets direct hits on boss
 		case A:
 			directHitsOnly = true;
+			break;
 		default:
 			break;
 		}
@@ -164,16 +167,20 @@ public class GameplayLevel {
 			if (spriteManager.doIntersect(boss, rocket)) {
 				rockets_to_remove.add(rocket);
 				int points;
+				//check what type of hit to see how many  points to take off
 				if (spriteManager.isDirectHit(boss, rocket) || directHitsOnly) points = GameplayInfo.directHit;
 				else points = GameplayInfo.normalHit;
-
 				gameplayInfo.updateScore(points);
 				spriteManager.bossDamage(points);
 			}
 		}
 		spriteManager.removeSprites(rockets_to_remove);
 	}
-
+	/**
+	 * Removes
+	 * @param dead_sprites
+	 * @param rocket
+	 */
 	private void removeOutOfBoundsRocket(ArrayList<Sprite> dead_sprites, Sprite rocket) {
 		if (spriteManager.OutOfBoundsY(rocket)) {
 			dead_sprites.add(rocket);

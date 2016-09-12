@@ -11,14 +11,12 @@ public abstract class Sprite {
 	protected int velocityY;
 	protected ImageView image;
 	/**
-	 * 
 	 * @param width - X coordinate Sprite is set to
 	 */
 	public void setX(double width) {
 		image.setX(width);
 	}
 	/**
-	 * 
 	 * @return -  get the X coordinate of Sprite
 	 */
 	public double getX(){
@@ -33,7 +31,7 @@ public abstract class Sprite {
 	}
 	/**
 	 * 
-	 * @param height - Y coordinate Sprite is set to
+	 * @param height - The Y coordinate Sprite is set to
 	 */
 	public void setY(double height) {
 		image.setY(height);
@@ -61,7 +59,6 @@ public abstract class Sprite {
 		setY(getY() - time * velocityY);
 	}
 	/**
-	 * 
 	 * @return - The imageView node
 	 */
 	public Node getNode() {

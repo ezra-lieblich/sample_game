@@ -1,7 +1,8 @@
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 /**
- * Rocket that is launched from the rocket in gameplayLevel
+ * Extends Sprite. Rocket that is launched from the rocket in 
+ * gameplayLevel
  * @author ezra
  *
  */

@@ -85,9 +85,6 @@ public class SpriteManager {
 		case LEFT:
 			myShip.moveLeft();
 			break;
-			//cheat code to fire rocket on input rather then release
-		case B:
-			fireRocket();
 		default:
 			break;
 		}

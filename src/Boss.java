@@ -2,7 +2,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 /**
- * Boss Sprite that appears after the first level is complete. Moves horizontally and 
+ * Boss extends Sprite and appears after the first level is complete. Moves horizontally and 
  * vertically and also has health component
  * @author ezra
  *

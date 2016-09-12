@@ -32,7 +32,7 @@ class Game {
 
 	/**
 	 * Create the game's scene and sets it to the LaunchScreen class
-	 * Also sets scene on key presses
+	 * Also handles key presses
 	 * @param width - The width of the scene
 	 * @param height - The height of the scene
 	 */
@@ -141,7 +141,7 @@ class Game {
 		}
 	}
 	/** 
-	 * The gameOverScreen that is called after gamePlayLevel is over and asks you if you want to
+	 * The gameOverScreen is called after gamePlayLevel is over and asks you if you want to
 	 * play again. It interacts with either the the launchScreen or gamePlayLevel after depending
 	 * on what is pressed
 	 * @author ezra
@@ -157,7 +157,7 @@ class Game {
 
 		/**
 		 * Sets all the instance variable and records the outcome of the game.
-		 * @param outcome - boolean if you have won or lost the game. Also add the the text to Root
+		 * @param outcome - boolean if you have won or lost the game. Also adds the the text to Root
 		 */
 		public GameOverScreen(boolean outcome) {
 			winGame = outcome;
@@ -169,7 +169,6 @@ class Game {
 			Root.getChildren().add(playAgainText());
 		}
 		/**
-		 * 
 		 * @return -  The root of the gameOverScreen
 		 */
 		public Parent getRoot() {
@@ -214,7 +213,7 @@ class Game {
 			return game_outcome;
 		}
 		/**
-		 * Adds text asking to quit or playing again
+		 * Adds text asking to quit or play again
 		 * @return - Text to be added to the root
 		 */
 		private Text playAgainText() {

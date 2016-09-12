@@ -23,7 +23,7 @@ public class Ship extends Sprite {
 	}
 	/**
 	 * Overrides the move and wrapAround resets your position to the opposite side
-	 * if you are outside the map
+	 * if you are outside the scene
 	 */
 	public void move(double time) {
 		wrapAround();
@@ -42,7 +42,7 @@ public class Ship extends Sprite {
 		velocityX = -shipSpeed;
 	}
 	/**
-	 * Sets velocity to zero and stop movement. Called when key is released
+	 * Sets velocity to zero and stops movement. Called when key is released
 	 */
 	public void stop() {
 		velocityX = 0; 
