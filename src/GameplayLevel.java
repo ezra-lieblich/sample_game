@@ -17,39 +17,39 @@ import javafx.util.Duration;
 public class GameplayLevel {
 	private SpriteManager spriteManager; 
 	private GameplayInfo gameplayInfo;
-    private Group Root;
-    private int firstLevelEnemiesRemaining = 10;
-    public static final String id = "level node";
-    private Timeline firstLevel;
-    private boolean skipGame;
-    private boolean directHitsOnly;
-    
-    /**
-     * Creates the route and starts the game by setting up the text and sending the first wave of enemies
-     */
-    public GameplayLevel() {
-        Root = new Group();
-        Root.setOnKeyPressed(e -> keyInput(e.getCode()));
- 	   	Root.setOnKeyReleased(e -> keyRelease(e.getCode()));
-        Root.setId(id);
-        spriteManager = new SpriteManager(Root);
-        gameplayInfo = new GameplayInfo();
-        skipGame = false;
-        directHitsOnly = false;
-        firstWave();
-    }
-    /**
-     * @return The root that the scene sets it to
-     */
-   public Group getRoot() {
-	   return Root;
-   }
-   /**
-    * Moves all the Sprite and also checks collisions with Asteroids or Rockets Depending on what
-    * level the user is on
-    * @param time
-    */
-   public void step(double time) {
+	private Group Root;
+	private int firstLevelEnemiesRemaining = 10;
+	public static final String id = "level node";
+	private Timeline firstLevel;
+	private boolean skipGame;
+	private boolean directHitsOnly;
+
+	/**
+	 * Creates the route and starts the game by setting up the text and sending the first wave of enemies
+	 */
+	public GameplayLevel() {
+		Root = new Group();
+		Root.setOnKeyPressed(e -> keyInput(e.getCode()));
+		Root.setOnKeyReleased(e -> keyRelease(e.getCode()));
+		Root.setId(id);
+		spriteManager = new SpriteManager(Root);
+		gameplayInfo = new GameplayInfo();
+		skipGame = false;
+		directHitsOnly = false;
+		firstWave();
+	}
+	/**
+	 * @return The root that the scene sets it to
+	 */
+	public Group getRoot() {
+		return Root;
+	}
+	/**
+	 * Moves all the Sprite and also checks collisions with Asteroids or Rockets Depending on what
+	 * level the user is on
+	 * @param time
+	 */
+	public void step(double time) {
 		spriteManager.move(time);
 		if (gameplayInfo.currentLevel.getText() == GameplayInfo.levelOne){
 			checkCollisions();
@@ -63,38 +63,38 @@ public class GameplayLevel {
 			bossCollisions();
 		}
 	}
-   /**
-    * Adds the boss to the gameplay to start second level. Also calls gameplayInfo
-    * to switch current level 
-    */
-   private void startSecondLevel() {
-	   gameplayInfo.switchCurrentLevel();
-	   spriteManager.addBoss();
-}
-/**
- * @return returns true if user has no lives or boss is defeated
- */
-public boolean isGameOver() {
-	return gameplayInfo.getLives() <= 0 || winGame();
-	
-}
-/**
- * Calls spriteManager to check key inputs to move Rocket. Also checks for cheat codes
- * See ReadMe for specifics
- * @param code - key input that is passed from my scene
- */
-public void keyInput(KeyCode code) {
-	   spriteManager.keyInput(code);
+	/**
+	 * Adds the boss to the gameplay to start second level. Also calls gameplayInfo
+	 * to switch current level 
+	 */
+	private void startSecondLevel() {
+		gameplayInfo.switchCurrentLevel();
+		spriteManager.addBoss();
+	}
+	/**
+	 * @return returns true if user has no lives or boss is defeated
+	 */
+	public boolean isGameOver() {
+		return gameplayInfo.getLives() <= 0 || winGame();
+
+	}
+	/**
+	 * Calls spriteManager to check key inputs to move Rocket. Also checks for cheat codes
+	 * See ReadMe for specifics
+	 * @param code - key input that is passed from my scene
+	 */
+	public void keyInput(KeyCode code) {
+		spriteManager.keyInput(code);
 		switch (code) {
 		//cheat code to skip first level
 		case S:
 			firstLevel.stop();
 			firstLevelEnemiesRemaining = 0;
 			break;
-		//cheat code to auto win and go to game over screen
+			//cheat code to auto win and go to game over screen
 		case W:
 			skipGame = true;
-		//cheat code to make all rockets direct hits on boss
+			//cheat code to make all rockets direct hits on boss
 		case A:
 			directHitsOnly = true;
 		default:
@@ -133,17 +133,17 @@ public void keyInput(KeyCode code) {
 				gameplayInfo.removeLife();
 				firstLevelEnemiesRemaining--;
 			}
-				for (Sprite rocket : spriteManager.getRockets()) {
-					removeOutOfBoundsRocket(sprites_to_remove, rocket);
-					//Score increases if rocket hits asteroid
-					if (spriteManager.doIntersect(asteroid, rocket)) {
-						sprites_to_remove.add(asteroid);
-						sprites_to_remove.add(rocket);
-						gameplayInfo.updateScore(GameplayInfo.normalHit);
-						firstLevelEnemiesRemaining--;
-						break;
-					}
+			for (Sprite rocket : spriteManager.getRockets()) {
+				removeOutOfBoundsRocket(sprites_to_remove, rocket);
+				//Score increases if rocket hits asteroid
+				if (spriteManager.doIntersect(asteroid, rocket)) {
+					sprites_to_remove.add(asteroid);
+					sprites_to_remove.add(rocket);
+					gameplayInfo.updateScore(GameplayInfo.normalHit);
+					firstLevelEnemiesRemaining--;
+					break;
 				}
+			}
 		}
 		spriteManager.removeSprites(sprites_to_remove);
 	}
@@ -157,8 +157,8 @@ public void keyInput(KeyCode code) {
 		//automatically lose if boss hits ship or falls past you
 		if (spriteManager.OutOfBoundsY(boss) ||
 				spriteManager.doIntersect(boss, spriteManager.getMyShip())) {
-				gameplayInfo.gameOver();
-			}
+			gameplayInfo.gameOver();
+		}
 		for (Sprite rocket : spriteManager.getRockets()) {
 			removeOutOfBoundsRocket(rockets_to_remove, rocket);
 			if (spriteManager.doIntersect(boss, rocket)) {
@@ -166,14 +166,14 @@ public void keyInput(KeyCode code) {
 				int points;
 				if (spriteManager.isDirectHit(boss, rocket) || directHitsOnly) points = GameplayInfo.directHit;
 				else points = GameplayInfo.normalHit;
-				
+
 				gameplayInfo.updateScore(points);
 				spriteManager.bossDamage(points);
 			}
 		}
 		spriteManager.removeSprites(rockets_to_remove);
 	}
-	
+
 	private void removeOutOfBoundsRocket(ArrayList<Sprite> dead_sprites, Sprite rocket) {
 		if (spriteManager.OutOfBoundsY(rocket)) {
 			dead_sprites.add(rocket);
@@ -185,7 +185,7 @@ public void keyInput(KeyCode code) {
 	public boolean winGame() {
 		return spriteManager.isBossDead() || skipGame;
 	}
-	
+
 	/**
 	 * A class that is accessed by GameplayLevel and contains important information about the
 	 * current game state such as the lives, level and score
@@ -193,49 +193,49 @@ public void keyInput(KeyCode code) {
 	 *
 	 */
 	class GameplayInfo {
-		 public static final String scorePrefix = "Score: ";
-		 public static final String livePrefix = "Lives: ";
-		 public static final String levelOne = "First Level";
-		 public static final String bossLevel = "Boss Level";
-		 public static final int textSize = 20;
-		 public static final int normalHit = 1;
-		 public static final int directHit = 5;
-		 private int Score; 	
-		 private Text scoreText;
-		 private Text liveText;
-		 private int lives;
-		 private Text currentLevel;
-		 
-		 /**
-		  * Sets the score, current level, and lives information to text at top
-		  * of screen
-		  */
-		 public GameplayInfo() {
-			 currentLevel = new Text(150, textSize, "First Level");
-		     currentLevel.setFont(new Font(textSize));
-		     Score = 0;
-		     scoreText = new Text(300, textSize, "Score: " + Score);
-		     scoreText.setFont(new Font(textSize));
-		     lives = 3;
-		     liveText = new Text(0, textSize, "Lives: " + lives);
-		     liveText.setFont(new Font(textSize));
-		     Root.getChildren().add(scoreText);
-		     Root.getChildren().add(liveText);
-		     Root.getChildren().add(currentLevel);
-		 }
-		 /**
-		  * Switches the current level and updates text once first level is complete
-		  */
-		 public void switchCurrentLevel() {
-			 currentLevel.setText(bossLevel);
-		 }
-		 /**
-		  * @return the number of lives remaining
-		  */
-		 public int getLives() {
-			 return lives;
-		 }
-		 /**
+		public static final String scorePrefix = "Score: ";
+		public static final String livePrefix = "Lives: ";
+		public static final String levelOne = "First Level";
+		public static final String bossLevel = "Boss Level";
+		public static final int textSize = 20;
+		public static final int normalHit = 1;
+		public static final int directHit = 5;
+		private int Score; 	
+		private Text scoreText;
+		private Text liveText;
+		private int lives;
+		private Text currentLevel;
+
+		/**
+		 * Sets the score, current level, and lives information to text at top
+		 * of screen
+		 */
+		public GameplayInfo() {
+			currentLevel = new Text(150, textSize, "First Level");
+			currentLevel.setFont(new Font(textSize));
+			Score = 0;
+			scoreText = new Text(300, textSize, "Score: " + Score);
+			scoreText.setFont(new Font(textSize));
+			lives = 3;
+			liveText = new Text(0, textSize, "Lives: " + lives);
+			liveText.setFont(new Font(textSize));
+			Root.getChildren().add(scoreText);
+			Root.getChildren().add(liveText);
+			Root.getChildren().add(currentLevel);
+		}
+		/**
+		 * Switches the current level and updates text once first level is complete
+		 */
+		public void switchCurrentLevel() {
+			currentLevel.setText(bossLevel);
+		}
+		/**
+		 * @return the number of lives remaining
+		 */
+		public int getLives() {
+			return lives;
+		}
+		/**
 		 * Removes a life and updates text. Called when asteroid falls past user or hits ship
 		 */
 		public void removeLife() {

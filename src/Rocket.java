@@ -12,10 +12,10 @@ public class Rocket extends Sprite{
 	 */
 	public Rocket(Ship ship){
 		Image rocket = new Image(getClass().getClassLoader().getResourceAsStream("rocket.png"));
-        image = new ImageView(rocket);
-        setX(ship.getX() + ship.getXSize()/2 - this.getXSize() / 2);
-        setY(ship.getY() - this.getYSize());
-        velocityY = 150;
-        velocityX = 0;
+		image = new ImageView(rocket);
+		setX(ship.getX() + ship.getXSize()/2 - this.getXSize() / 2);
+		setY(ship.getY() - this.getYSize());
+		velocityY = 150;
+		velocityX = 0;
 	}
 }

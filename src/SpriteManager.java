@@ -11,37 +11,37 @@ import javafx.scene.input.KeyCode;
  *
  */
 public class SpriteManager {
-    private Group Root;
-    private Ship myShip;
+	private Group Root;
+	private Ship myShip;
 	private ArrayList<Sprite> Rockets = new ArrayList<Sprite>();
-    private ArrayList<Sprite> Asteroids = new ArrayList<Sprite>();
-    private Boss Boss;
-    
-    /**
-     * Sets up Ship and sets Root to instance variable
-     * @param root - Need Root to be instance variable to add and remove 
-     * Sprites from root
-     */
+	private ArrayList<Sprite> Asteroids = new ArrayList<Sprite>();
+	private Boss Boss;
+
+	/**
+	 * Sets up Ship and sets Root to instance variable
+	 * @param root - Need Root to be instance variable to add and remove 
+	 * Sprites from root
+	 */
 	public SpriteManager(Group root) {
 		Root = root;
 		myShip = new Ship();
-	    Root.getChildren().add(myShip.getNode());
+		Root.getChildren().add(myShip.getNode());
 	}
 	/**
 	 * @return - The Boss Sprite
 	 */
-	 public Boss getBoss() {
-		 return Boss;
-	 }
-	 /**
-	  * @return - The Ship Sprite
-	  */
-	 public Ship getMyShip() {
-			return myShip;
+	public Boss getBoss() {
+		return Boss;
 	}
-	 /**
-	  * @return - The list of Rocket Sprites currently in the scene
-	  */
+	/**
+	 * @return - The Ship Sprite
+	 */
+	public Ship getMyShip() {
+		return myShip;
+	}
+	/**
+	 * @return - The list of Rocket Sprites currently in the scene
+	 */
 	public ArrayList<Sprite> getRockets() {
 		return Rockets;
 	}
@@ -79,17 +79,17 @@ public class SpriteManager {
 	 */
 	public void keyInput(KeyCode code) {
 		switch (code) {
-        case RIGHT:
-        	myShip.moveRight();
-            break;
-        case LEFT:
-        	myShip.moveLeft();
-            break;
-        //cheat code to fire rocket on input rather then release
-        case B:
-        	fireRocket();
-        default:
-        	break;
+		case RIGHT:
+			myShip.moveRight();
+			break;
+		case LEFT:
+			myShip.moveLeft();
+			break;
+			//cheat code to fire rocket on input rather then release
+		case B:
+			fireRocket();
+		default:
+			break;
 		}
 	}
 	/**
@@ -99,20 +99,20 @@ public class SpriteManager {
 	 */
 	public void keyRelease(KeyCode code) {
 		switch (code) {
-        case RIGHT:
-        	myShip.stop();
-            break;
-        case LEFT:
-        	myShip.stop();
-            break;
-        case SPACE:
-            fireRocket();
-            break;	
-        default:
-        	break;
+		case RIGHT:
+			myShip.stop();
+			break;
+		case LEFT:
+			myShip.stop();
+			break;
+		case SPACE:
+			fireRocket();
+			break;	
+		default:
+			break;
 		}
 	}
-	
+
 	/**
 	 * Called from the firstLevel timeline. Drops a new enemy onto scene
 	 */
@@ -199,9 +199,9 @@ public class SpriteManager {
 	 * Fires rocket when space bar is pressed
 	 */
 	private void fireRocket() {
-    	Rocket new_rocket = new Rocket(myShip);
-        addProjectile(new_rocket);
-    }
+		Rocket new_rocket = new Rocket(myShip);
+		addProjectile(new_rocket);
+	}
 	/**
 	 * Adds either a rocket or asteroid projectile and adds it to corresponding list
 	 * @param sprite - Rocket or Asteroid that is to be added to Root/list

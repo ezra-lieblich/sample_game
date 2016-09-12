@@ -67,5 +67,5 @@ public abstract class Sprite {
 	public Node getNode() {
 		return image;
 	}
-	
+
 }
