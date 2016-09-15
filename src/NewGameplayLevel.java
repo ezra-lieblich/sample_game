@@ -1,6 +1,5 @@
-//This entire file is part of my masterpiece.
-// Ezra Lieblich
 import java.util.ArrayList;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Group;
@@ -16,7 +15,7 @@ import javafx.util.Duration;
  * @author ezra
  *
  */
-public class GameplayLevel {
+public class NewGameplayLevel {
 	private SpriteManager spriteManager; 
 	private GameplayInfo gameplayInfo;
 	private Group Root;
@@ -29,7 +28,7 @@ public class GameplayLevel {
 	/**
 	 * Creates the route and starts the game by setting up the text and sending the first wave of enemies
 	 */
-	public GameplayLevel() {
+	public NewGameplayLevel() {
 		Root = new Group();
 		Root.setOnKeyPressed(e -> keyInput(e.getCode()));
 		Root.setOnKeyReleased(e -> keyRelease(e.getCode()));
@@ -53,16 +52,25 @@ public class GameplayLevel {
 	 */
 	public void step(double time) {
 		spriteManager.move(time);
-		checkAllCollisions();
+		checkCollisions();
 		if (isLevelOne() && firstLevelEnemiesRemaining == 0){
 			startSecondLevel();	
 		}
+	}
+	/**
+	 * Adds the boss to the gameplay to start second level. Also calls gameplayInfo
+	 * to switch current level 
+	 */
+	private void startSecondLevel() {
+		gameplayInfo.switchCurrentLevel();
+		spriteManager.addBoss();
 	}
 	/**
 	 * @return returns true if user has no lives or boss is defeated
 	 */
 	public boolean isGameOver() {
 		return gameplayInfo.getLives() <= 0 || winGame();
+
 	}
 	/**
 	 * Calls spriteManager to check key inputs to move Rocket. Also checks for cheat codes
@@ -97,51 +105,62 @@ public class GameplayLevel {
 		spriteManager.keyRelease(code);
 	}
 	/**
-	 * @return true when boss is dead or cheat code is pressed
-	 */
-	public boolean winGame() {
-		return spriteManager.isBossDead() || skipGame;
-	}
-	/**
 	 * Called when gamePlayLevel is first initialized
 	 * Creates a timeline that drops enemy asteroids every 3 seconds
 	 */
-	private void firstWave() {
+	public void firstWave() {
 		firstLevel = new Timeline(new KeyFrame(
 				Duration.millis(3000), e -> spriteManager.asteroidDrop()));
 		firstLevel.setCycleCount(firstLevelEnemiesRemaining);
 		firstLevel.play();
 	}
 	/**
-	 * Adds the boss to the gameplay to start second level. Also calls gameplayInfo
-	 * to switch current level 
-	 */
-	private void startSecondLevel() {
-		gameplayInfo.switchCurrentLevel();
-		spriteManager.addBoss();
-	}
-	/**
 	 * Check collisions between all Sprite objects and updates properties of the 
-	 * game in GameplayInfo depending on the type of info
+	 * game
 	 */
-	private void checkAllCollisions() {
+	public void checkCollisions() {
 		//list of all sprites that have collided with each other or ran off screen
 		ArrayList<Sprite> sprites_to_remove = new ArrayList<Sprite>();
-		for (Sprite enemy : spriteManager.getAsteroids()) {
-			handleEnemyAttack(sprites_to_remove, enemy);
+		for (Sprite asteroid : spriteManager.getAsteroids()) {
+			//lose a life if asteroid falls past you or collides with ship
+			if (spriteManager.OutOfBoundsY(asteroid) ||
+					spriteManager.doIntersect(asteroid, spriteManager.getMyShip())){
+				sprites_to_remove.add(asteroid);
+				gameplayInfo.removeLife();
+				firstLevelEnemiesRemaining--;
+			}
 			for (Sprite rocket : spriteManager.getRockets()) {
-				removeOutOfBoundsRocket(sprites_to_remove, enemy);
-				handleRocketEnemyCollision(sprites_to_remove, rocket, enemy);
+				removeOutOfBoundsRocket(sprites_to_remove, rocket);
+				//Score increases if rocket hits asteroid
+				if (spriteManager.doIntersect(asteroid, rocket)) {
+					sprites_to_remove.add(asteroid);
+					sprites_to_remove.add(rocket);
+					gameplayInfo.updateScore(GameplayInfo.normalHit);
+					firstLevelEnemiesRemaining--;
+					break;
+				}
 			}
 		}
 		spriteManager.removeSprites(sprites_to_remove);
 	}
 	/**
-	 * Checks whether the enemy is either out of bounds or colliding with the ship.
-	 * Removes a life or ends game depending on if it is a boss or asteroid
-	 * @param dead_sprites Passes in the list to update the sprites we need to remove
-	 * @param enemy the Sprite we are checking 
+	 * Check collisions between all Sprite objects and updates properties of the 
+	 * game in GameplayInfo
 	 */
+	public void checkAllCollisions() {
+		//list of all sprites that have collided with each other or ran off screen
+		ArrayList<Sprite> sprites_to_remove = new ArrayList<Sprite>();
+		for (Sprite asteroid : spriteManager.getAsteroids()) {
+			//checks if asteroid falls past you or collides with ship
+			handleEnemyAttack(sprites_to_remove, asteroid);
+			for (Sprite rocket : spriteManager.getRockets()) {
+				removeOutOfBoundsRocket(sprites_to_remove, rocket);
+				//Score increases if rocket hits asteroid
+				handleRocketEnemyCollision(sprites_to_remove, rocket, asteroid);
+			}
+		}
+		spriteManager.removeSprites(sprites_to_remove);
+	}
 	private void handleEnemyAttack(ArrayList<Sprite> dead_sprites, Sprite enemy) {
 		if (spriteManager.OutOfBoundsY(enemy) ||
 				spriteManager.doIntersect(enemy, spriteManager.getMyShip())){
@@ -155,31 +174,48 @@ public class GameplayLevel {
 			}
 		}
 	}
-	/**
-	 * Checks if the rocket and enemy collides. Removes Sprites and also updates score accordingly
-	 * @param dead_sprites
-	 * @param rocket
-	 * @param enemy
-	 */
 	private void handleRocketEnemyCollision(ArrayList<Sprite> dead_sprites, Sprite rocket, Sprite enemy) {
 		if (spriteManager.doIntersect(enemy, rocket)) {
 			dead_sprites.add(rocket);
-			//Assume points added is normal i.e 1 point
 			int points = GameplayInfo.normalHit;
 			if (isLevelOne()) {
-				//only remove if it is an asteroid. Boss doesn't get removed
 				dead_sprites.add(enemy);
 				firstLevelEnemiesRemaining--;
 			}
 			else {
 				if (spriteManager.isDirectHit(enemy, rocket) || directHitsOnly) {
-					// A direct hit is worth more points and deals more damage
 					points = GameplayInfo.directHit;
 					spriteManager.bossDamage(points);
 				}
 			}
 			gameplayInfo.updateScore(points);	
 		}
+	}
+	/**
+	 * Check collisions between boss and Ship/Rockets and updates properties of the 
+	 * game
+	 */
+	public void bossCollisions() {
+		ArrayList<Sprite> rockets_to_remove = new ArrayList<Sprite>();
+		Boss boss = spriteManager.getBoss();
+		//automatically lose if boss hits ship or falls past you
+		if (spriteManager.OutOfBoundsY(boss) ||
+				spriteManager.doIntersect(boss, spriteManager.getMyShip())) {
+			gameplayInfo.gameOver();
+		}
+		for (Sprite rocket : spriteManager.getRockets()) {
+			removeOutOfBoundsRocket(rockets_to_remove, rocket);
+			if (spriteManager.doIntersect(boss, rocket)) {
+				rockets_to_remove.add(rocket);
+				int points;
+				//check what type of hit to see how many  points to take off
+				if (spriteManager.isDirectHit(boss, rocket) || directHitsOnly) points = GameplayInfo.directHit;
+				else points = GameplayInfo.normalHit;
+				gameplayInfo.updateScore(points);
+				spriteManager.bossDamage(points);
+			}
+		}
+		spriteManager.removeSprites(rockets_to_remove);
 	}
 	/**
 	 * Removes rockets that are out of bounds
@@ -192,12 +228,15 @@ public class GameplayLevel {
 		}
 	}
 	/**
-	 * @return Checks if game is at current level
+	 * @return true when boss is dead or cheat code is pressed
 	 */
+	public boolean winGame() {
+		return spriteManager.isBossDead() || skipGame;
+	}
 	private boolean isLevelOne() {
 		return gameplayInfo.currentLevel.getText() == GameplayInfo.levelOne;
 	}
-	//This nested class is not part of my code masterpiece
+
 	/**
 	 * A class that is accessed by GameplayLevel and contains important information about the
 	 * current game state such as the lives, level and score

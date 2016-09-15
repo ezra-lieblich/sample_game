@@ -19,7 +19,7 @@ public class Boss extends Sprite {
 		setX(Math.random() * (Main.SIZEX - this.getXSize()));
 		setY(0);
 		velocityY = -10;
-		velocityX = 55;
+		velocityX = 50;
 		HealthPoints = 75;
 	}
 	/**

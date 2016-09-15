@@ -57,6 +57,7 @@ public class SpriteManager {
 	public void addBoss() {
 		Boss = new Boss();
 		Root.getChildren().add(Boss.getNode());
+		Asteroids.add(Boss);
 	}
 	/**
 	 * Calls each Sprite's move method and updates the position of all Sprites
