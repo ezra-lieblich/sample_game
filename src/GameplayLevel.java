@@ -177,9 +177,9 @@ public class GameplayLevel {
 		spriteManager.removeSprites(rockets_to_remove);
 	}
 	/**
-	 * Removes
-	 * @param dead_sprites
-	 * @param rocket
+	 * Removes rockets that are out of bounds
+	 * @param dead_sprites - current list of dead Sprites
+	 * @param rocket - Rocket to examine
 	 */
 	private void removeOutOfBoundsRocket(ArrayList<Sprite> dead_sprites, Sprite rocket) {
 		if (spriteManager.OutOfBoundsY(rocket)) {
@@ -187,7 +187,7 @@ public class GameplayLevel {
 		}
 	}
 	/**
-	 * @return true when boss is dead
+	 * @return true when boss is dead or cheat code is pressed
 	 */
 	public boolean winGame() {
 		return spriteManager.isBossDead() || skipGame;

@@ -131,10 +131,9 @@ public class SpriteManager {
 				obj1.getY() > obj2.getY() + obj2.getYSize()); 
 	}
 	/**
-	 * Checks if the rocket collided in the middle fourth of the boss.
 	 * @param boss Boss Sprite to look at
 	 * @param rocket  Rocket Sprite to look at
-	 * @return True if its in the middle fourth and false if not
+	 * @return True if rocket in the middle fourth of boss, false if not
 	 */
 	public boolean isDirectHit(Sprite boss, Sprite rocket) {
 		double boss_center = boss.getX() + boss.getXSize()/2;
@@ -143,7 +142,7 @@ public class SpriteManager {
 				rocket_center < (boss_center + boss.getXSize()*.125);
 	}
 	/**
-	 * Checks if a sprite is vertically outside the games screen. Called by gamePlayLevel
+	 * Called by gamePlayLevel
 	 * @param sprite - Sprite that is check to be outside of bounds
 	 * @return - True if Sprite is above or below the screen false otherwise
 	 */
