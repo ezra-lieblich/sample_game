@@ -41,8 +41,11 @@ class Game {
 		myScene = new Scene(launchScreen.getRoot(), width, height, Color.MEDIUMBLUE);
 		myScene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
 		myScene.setOnKeyReleased(e -> handleKeyRelease(e.getCode()));
+<<<<<<< HEAD
 		System.out.println("RHONDUKEEEEEEEEEEEE");
 		System.out.print("DUVALL BABY");
+=======
+>>>>>>> parent of 4cbca19... RHONDUKEEEE
 		return myScene;
 
 	}
