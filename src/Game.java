@@ -41,11 +41,8 @@ class Game {
 		myScene = new Scene(launchScreen.getRoot(), width, height, Color.MEDIUMBLUE);
 		myScene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
 		myScene.setOnKeyReleased(e -> handleKeyRelease(e.getCode()));
-<<<<<<< HEAD
 		System.out.println("RHONDUKEEEEEEEEEEEE");
 		System.out.print("DUVALL BABY");
-=======
->>>>>>> parent of 4cbca19... RHONDUKEEEE
 		return myScene;
 
 	}
@@ -227,6 +224,7 @@ class Game {
 			play_again.setFont(new Font(textSize));
 			play_again.setX(centerX);
 			play_again.setY(centerY + textSize*3.5);
+			System.out.println("PLEASE WORK");
 			return play_again;
 		}
 	}
