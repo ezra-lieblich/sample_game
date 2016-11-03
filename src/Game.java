@@ -41,6 +41,7 @@ class Game {
 		myScene = new Scene(launchScreen.getRoot(), width, height, Color.MEDIUMBLUE);
 		myScene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
 		myScene.setOnKeyReleased(e -> handleKeyRelease(e.getCode()));
+		System.out.println("RHONDUKEEEEEEEEEEEE");
 		return myScene;
 
 	}
