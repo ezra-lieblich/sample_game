@@ -46,7 +46,6 @@ public class GameplayLevel {
 	public Group getRoot() {
 		return Root;
 	}
-	
 	/**
 	 * Moves all the Sprites and also checks collisions with Asteroids or Rockets depending on what
 	 * level the user is on
@@ -59,10 +58,8 @@ public class GameplayLevel {
 			startSecondLevel();	
 		}
 	}
-	
 	/**
 	 * @return returns true if user has no lives or boss is defeated
-	 * 
 	 */
 	public boolean isGameOver() {
 		return gameplayInfo.getLives() <= 0 || winGame();

@@ -48,9 +48,7 @@ public class Ship extends Sprite {
 		velocityX = 0; 
 	}
 	private void wrapAround() {
-		if (this.getX() < 0) {
-			this.setX(Main.SIZEX - this.getXSize());
-		}
+		if(this.getX() < 0) this.setX(Main.SIZEX - this.getXSize());
 		if(this.getX() + this.getXSize() > Main.SIZEX) this.setX(0); 
 	}
 }
