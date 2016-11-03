@@ -42,6 +42,7 @@ class Game {
 		myScene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
 		myScene.setOnKeyReleased(e -> handleKeyRelease(e.getCode()));
 		System.out.println("RHONDUKEEEEEEEEEEEE");
+		System.out.print("DUVALL BABY");
 		return myScene;
 
 	}
